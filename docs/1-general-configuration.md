@@ -1,58 +1,60 @@
 # General Configuration
 
-Active Admin generates an initializer for you with sane defaults. The
-initializer can be found at `config/initializers/active_admin.rb`. For the most
-part, it is well documented. Here are a few common configurations.
+* application-wide settigns go in `config/initializers/active_admin.rb`
+* resource-specific settings go in `app/admin/*.rb`
 
 ## Authentication
 
-Active Admin requires two settings to authenticate and use the current user
-within your application. Both are set in `config/initializers/active_admin.rb`.
-By default they are setup for use with Devise and a model named AdminUser. If
-you chose a different model name, you will need to update these settings.
+By default we authenticate AdminUser model using [Devise](https://github.com/plataformatec/devise):
 
-Set the method that controllers should call to authenticate the current user
-with:
+```ruby
+# config/initializers/active_admin.rb
+config.authentication_method = :authenticate_admin_user! # method called on controller to require login
+config.current_user_method   = :current_admin_user       # helper method to access the current user logged in
+```
 
-    # config/initializers/active_admin.rb
-    config.authentication_method = :authenticate_admin_user!
+To change the model used for authentication (e.g., the User model):
 
-Set the method to call within the view to access the current admin user
+```ruby
+config.authentication_method = :authenticate_user!
+config.current_user_method   = :current_user
+````
 
-    # config/initializers/active_admin.rb
-    config.current_user_method = :current_admin_user
+To turn off authentication:
 
-Both of these settings can be set to false to turn off authentication.
-
-    # Turn off authentication all together
-    config.authentication_method = false
-    config.current_user_method   = false
+```ruby
+config.authentication_method = false
+config.current_user_method   = false
+```
 
 ## Site Title Options
 
-You can update the title or use an optional image in the initializer also. In addition you can set the link.  By default
-there is no link and the title is set to the name of your Rails.application class name.
+You can easily configure the sitle title. By default there is no link and the title is set to your application name.
 
-    # config/initializers/active_admin.rb
-    config.site_title = "My Admin Site"
-    config.site_title_link = "/"    ## Rails url helpers do not work here
-    config.site_title_image = "site_log_image.png"
+```ruby
+# config/initializers/active_admin.rb
+config.site_title       = "My Admin Site"      # The string displayed
+config.site_title_link  = "/"                  # Where you want it to link to (if anywhere)
+config.site_title_image = "site_log_image.png" # An image you want displayed (should be in the /public folder)
+```
 
 ## Internationalization (I18n)
 
-To internationalize Active Admin or to change default strings, you can copy
-`lib/active_admin/locales/en.yml` to your application `config/locales` directory and
-change its content. You can contribute to the project with your translations too!
+Active Admin comes with built-in translations, but you can easily customize them by providing your own in your
+`config/locales` directory. Check out the [English locale file](/lib/active_admin/locales/en.yml)
+to see what can be translated.
 
 ## Namespaces
 
 When registering resources in Active Admin, they are loaded into a namespace.
 The default namespace is "admin".
 
-    # app/admin/posts.rb
-    ActiveAdmin.register Post do
-      # ...
-    end
+```ruby
+# app/admin/posts.rb
+ActiveAdmin.register Post do
+  # ...
+end
+```
 
 The Post resource will be loaded into the "admin" namespace and will be
 available at `/admin/posts`. Each namespace holds on to its own configuration
@@ -63,67 +65,77 @@ have different site title's for each namespace. You can use the
 `config.namespace(name)` block within the initializer file to configure them
 individually.
 
-    ActiveAdmin.setup do |config|
-      config.site_title = "My Default Site Title"
+```ruby
+ActiveAdmin.setup do |config|
+  config.site_title = "My Default Site Title"
 
-      config.namespace :admin do |admin|
-        admin.site_title = "Admin Site"
-      end
+  config.namespace :admin do |admin|
+    admin.site_title = "Admin Site"
+  end
 
-      config.namespace :super_admin do |super_admin|
-        super_admin.site_title = "Super Admin Site"
-      end
-    end
+  config.namespace :super_admin do |super_admin|
+    super_admin.site_title = "Super Admin Site"
+  end
+end
+```
 
 Each setting available in the Active Admin setup block is configurable on a per
 namespace basis.
 
 ## Load paths
 
-By default Active Admin files go under '/app/admin'. You can change this
+By default Active Admin files go under `/app/admin`. You can change this
 directory in the initializer file:
 
-    ActiveAdmin.setup do |config|
-      config.load_paths = [File.join(Rails.root, "app", "ui")]
-    end
+```ruby
+ActiveAdmin.setup do |config|
+  config.load_paths = [File.join(Rails.root, "app", "ui")]
+end
+```
 
 ## Comments
 
 By default Active Admin includes comments on resources. Sometimes, this is
 undesired. To disable comments for the entire application:
 
-    ActiveAdmin.setup do |config|
-
-      config.allow_comments = false
-
-    end
+```ruby
+ActiveAdmin.setup do |config|
+  config.allow_comments = false
+end
+```
 
 If you would like to enable / disable comments for just a namespace, do the
 following:
 
-    ActiveAdmin.setup do |config|
-
-      config.namespace :admin do |admin|
-        admin.allow_comments = false
-      end
-
-    end
+```ruby
+ActiveAdmin.setup do |config|
+  config.namespace :admin do |admin|
+    admin.allow_comments = false
+  end
+end
+```
 
 You can also disable comments for a specific resource:
 
-    ActiveAdmin.register Post do
-      config.comments = false
-    end
+```ruby
+ActiveAdmin.register Post do
+  config.comments = false
+end
+```
 
 ## Utility Navigation
 
-The "utility navigation" shown at the top right when logged in by default shows the current user email address and a link to "Log Out".  However, the utility navigation is just like any other menu in the system, so you can provide your own menu to be rendered in place if you like.
+The "utility navigation" shown at the top right when logged in by default shows the current
+user email address and a link to "Log Out".  However, the utility navigation is just like
+any other menu in the system, so you can provide your own menu to be rendered instead.
 
-    ActiveAdmin.setup do |config|
-      config.namespace :admin do |admin|
-        admin.build_menu :utility_navigation do |menu|
-          menu.add label: "ActiveAdmin.info", url: "http://www.activeadmin.info", html_options: { target: :blank }
-          admin.add_logout_button_to_menu menu # can also pass priority & html_options for link_to to use
-        end
-      end
+```ruby
+ActiveAdmin.setup do |config|
+  config.namespace :admin do |admin|
+    admin.build_menu :utility_navigation do |menu|
+      menu.add label: "ActiveAdmin.info", url: "http://www.activeadmin.info", html_options: { target: :blank }
+      admin.add_logout_button_to_menu menu # can also pass priority & html_options for link_to to use
     end
+  end
+end
+```
