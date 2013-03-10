@@ -12,13 +12,14 @@ multiple records at once.  You are able to disable this action if you desire (se
 ## Creating Your Own Batch Actions
 
 To create your own batch action, use the `batch_action` method.  You are provided an array of record IDs
-to operate on.  The array should contain at least one ID.
+to operate on. The array should contain at least one ID.
 
     ActiveAdmin.register Post do
       batch_action :flag do |selection|
         Post.find(selection).each do |post|
           post.flag! :hot
         end
+        redirect_to collection_path, :notice => "Posts were flagged"
       end
     end
 
