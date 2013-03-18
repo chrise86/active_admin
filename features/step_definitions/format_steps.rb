@@ -22,7 +22,6 @@ end
 Then /^I should download a CSV file with "([^"]*)" separator for "([^"]*)" containing:$/ do |sep, resource_name, table|
   page.response_headers['Content-Type'].should == 'text/csv; charset=utf-8'
   csv_filename = "#{resource_name}-#{Time.now.strftime("%Y-%m-%d")}.csv"
-  page.response_headers['Content-Disposition'].should == %{attachment; filename="#{csv_filename}"}
   body = page.driver.response.body
 
   begin
