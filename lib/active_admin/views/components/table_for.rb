@@ -69,7 +69,7 @@ module ActiveAdmin
 
         if sort_key
           th :class => classes do
-            link_to(col.pretty_title, params.merge(:order => "#{sort_key}_#{order_for_sort_key(sort_key)}").except(:page))
+            link_to col.pretty_title, :order => "#{sort_key}_#{order_for_sort_key(sort_key)}"
           end
         else
           th(col.pretty_title, :class => classes)

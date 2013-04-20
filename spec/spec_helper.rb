@@ -72,6 +72,7 @@ module ActiveAdminIntegrationSpecHelper
     ActionView::Base.send :include, ActionView::Helpers
     ActionView::Base.send :include, ActiveAdmin::ViewHelpers
     ActionView::Base.send :include, Rails.application.routes.url_helpers
+    ActionView::Base.send :include, Module.new{ def safe_params; {}; end }
     ActionView::Base.new(ActionController::Base.view_paths, assigns, controller)
   end
   alias_method :action_view, :mock_action_view

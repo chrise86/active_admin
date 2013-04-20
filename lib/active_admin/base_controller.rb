@@ -74,5 +74,14 @@ module ActiveAdmin
       ACTIVE_ADMIN_ACTIONS.include?(params[:action].to_sym) ? false : 'active_admin'
     end
 
+    def safe_params
+      request.query_parameters.slice *::ActiveAdmin.application.safe_params
+    end
+    helper_method :safe_params
+
+    def default_url_options
+      super.merge safe_params
+    end
+
   end
 end

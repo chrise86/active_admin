@@ -27,6 +27,10 @@ module ActiveAdmin
     # A hash of all the registered namespaces
     setting :namespaces, {}
 
+    # The parameters you want to persist between requests.
+    # These are automatically added to links on the current page.
+    setting :safe_params, []
+
     # Load paths for admin configurations. Add folders to this load path
     # to load up other resources for administration. External gems can
     # include their paths in this load path to provide active_admin UIs
