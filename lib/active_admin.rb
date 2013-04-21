@@ -11,6 +11,14 @@ require 'active_admin/dependency_checker'
 require 'active_admin/sass/helpers'
 require 'active_admin/engine'
 
+class MetaSearch::Builder
+  def assign_attributes(opts)
+    opts.each_pair do |k, v|
+      send "#{k}=", v if base.column_names.include? k[/(.+)_.+\z/, 1]
+    end
+  end
+end
+
 module ActiveAdmin
 
   autoload :VERSION,                  'active_admin/version'
