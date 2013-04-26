@@ -34,19 +34,16 @@ module ActiveAdmin
 
       def setting(name, default)
         default_settings[name] = default
-        attr_accessor(name)
+        attr_writer name
 
-        # Create an accessor that grabs from the defaults
-        # if @name has not been set yet
-        class_eval <<-EOC, __FILE__, __LINE__ + 1
-          def #{name}
-            if instance_variable_defined? :@#{name}
-              @#{name}
-            else
-              read_default_setting(:#{name})
-            end
+        # Create an accessor that looks up the default value if none is set.
+        define_method name do
+          if instance_variable_defined? "@#{name}"
+            instance_variable_get "@#{name}"
+          else
+            read_default_setting name.to_sym
           end
-        EOC
+        end
       end
 
       def deprecated_setting(name, default, message = nil)
