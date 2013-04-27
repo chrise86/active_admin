@@ -197,6 +197,7 @@ module ActiveAdmin
     end
 
     def register_page_controller(config)
+      #Object.const_set config.controller_name, Class.new(ActiveAdmin::PageController)
       eval "class ::#{config.controller_name} < ActiveAdmin::PageController; end"
       config.controller.active_admin_config = config
     end
