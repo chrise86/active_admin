@@ -22,10 +22,10 @@ module ActiveAdmin
       router.instance_exec(@application.namespaces.values, self) do |namespaces, aa_router|
         namespaces.each do |namespace|
           if namespace.root?
-            instance_eval &aa_router.root_and_dashboard_routes(namespace)
+            instance_exec &aa_router.root_and_dashboard_routes(namespace)
           else
             namespace(namespace.name) do
-              instance_eval &aa_router.root_and_dashboard_routes(namespace)
+              instance_exec &aa_router.root_and_dashboard_routes(namespace)
             end
           end
         end
@@ -55,12 +55,12 @@ module ActiveAdmin
             routes_for_belongs_to = route_definition_block.dup
             route_definition_block = Proc.new do
               # If its optional, make the normal resource routes
-              instance_eval &routes_for_belongs_to if config.belongs_to_config.optional?
+              instance_exec &routes_for_belongs_to if config.belongs_to_config.optional?
 
               # Make the nested belongs_to routes
               # :only is set to nothing so that we don't clobber any existing routes on the resource
               resources config.belongs_to_config.target.resource_name.plural, :only => [] do
-                instance_eval &routes_for_belongs_to
+                instance_exec &routes_for_belongs_to
               end
             end
           end
@@ -70,12 +70,12 @@ module ActiveAdmin
             routes_in_namespace = route_definition_block.dup
             route_definition_block = Proc.new do
               namespace config.namespace.name do
-                instance_eval(&routes_in_namespace)
+                instance_exec(&routes_in_namespace)
               end
             end
           end
 
-          instance_eval &route_definition_block
+          instance_exec &route_definition_block
         end
       end
     end

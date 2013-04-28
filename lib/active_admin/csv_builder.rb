@@ -31,7 +31,7 @@ module ActiveAdmin
       @columns          = []
       @column_separator = options.delete(:separator)
       @options          = options.delete(:options)
-      instance_eval &block if block_given?
+      instance_exec &block if block_given?
     end
 
     # Add a column

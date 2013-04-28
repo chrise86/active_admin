@@ -5,7 +5,7 @@ module ActiveAdmin
       def build(section)
         @section = section
         super(title, :icon => @section.icon)
-        instance_eval &@section.block
+        instance_exec &@section.block
       end
 
       protected

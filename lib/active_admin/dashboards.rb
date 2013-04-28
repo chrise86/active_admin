@@ -23,7 +23,7 @@ module ActiveAdmin
       def build(&block)
         warn "DEPRECATION WARNING: ActiveAdmin::Dashboard is deprecated and will be removed in the next version"
         @built = true
-        module_eval(&block)
+        module_exec(&block)
       end
 
       def built?

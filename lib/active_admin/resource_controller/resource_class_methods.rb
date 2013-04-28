@@ -6,7 +6,7 @@ module ActiveAdmin
       # methods to only return the class defined in the instance
       # of ActiveAdmin::Resource
       def override_resource_class_methods!
-        self.class_eval do
+        self.class_exec do
           def self.resource_class=(klass); end
 
           def self.resource_class
